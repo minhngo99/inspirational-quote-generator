@@ -1,114 +1,221 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
+import React, { useEffect, useState } from "react";
 
-const inter = Inter({ subsets: ['latin'] })
+import Head from "next/head";
+import Image from "next/image";
+import styles from "@/styles/Home.module.css";
+
+// Components
+import {
+  BackgroundImage1,
+  BackgroundImage2,
+  FooterCon,
+  FooterLink,
+  GenerateQuoteButton,
+  GenerateQuoteButtonText,
+  GradientBackgroundCon,
+  QuoteGeneratorCon,
+  QuoteGeneratorInnerCon,
+  QuoteGeneratorSubTitle,
+  QuoteGeneratorTitle,
+  RedSpan,
+} from "@/components/QuoteGenerator/QuoteGeneratorElements";
+//import QuoteGeneratorModal from "@/components/QuoteGenerator";
+
+// Assets
+import Clouds1 from "../assets/cloud-and-thunder.png";
+import Clouds2 from "../assets/cloudy-weather.png";
+
+/*AWS AMPLIFY
+Access key: AKIA53YBBW7GOBAXFIUS
+Secret access key: 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
+
+GraphQL endpoint: https://2ksk2psfinbffggdrv6me55cbm.appsync-api.us-east-1.amazonaws.com/graphql
+GraphQL API KEY: da2-niufjfbhqnd3zb67pdnhyidd7a
+/*
+
+/*
+import { API } from "aws-amplify";
+import { generateAQuote, quotesQueryName } from "@/src/graphql/queries";
+import { GraphQLResult } from "@aws-amplify/api-graphql";
+*/
+
+/*
+// interface for our appsync <> lambda JSON response
+interface GenerateAQuoteData {
+  generateAQuote: {
+    statusCode: number;
+    headers: { [key: string]: string };
+    body: string;
+  };
+}
+
+// interface for our DynamoDB object
+interface UpdateQuoteInfoData {
+  id: string;
+  queryName: string;
+  quotesGenerated: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// type guard for our fetch function
+function isGraphQLResultForquotesQueryName(
+  response: any
+): response is GraphQLResult<{
+  quotesQueryName: {
+    items: [UpdateQuoteInfoData];
+  };
+}> {
+  return (
+    response.data &&
+    response.data.quotesQueryName &&
+    response.data.quotesQueryName.items
+  );
+}
+*/
 
 export default function Home() {
+  const [numberOfQuotes, setNumberOfQuotes] = useState<Number | null>(0);
+  /*
+  const [openGenerator, setOpenGenerator] = useState(false);
+  const [processingQuote, setProcessingQuote] = useState(false);
+  const [quoteReceived, setQuoteReceived] = useState<String | null>(null);
+
+  // Function to fetch our DynamoDB object (quotes generated)
+  const updateQuoteInfo = async () => {
+    try {
+      const response = await API.graphql<UpdateQuoteInfoData>({
+        query: quotesQueryName,
+        authMode: "AWS_IAM",
+        variables: {
+          queryName: "LIVE",
+        },
+      });
+      console.log("response", response);
+      // setNumberOfQuotes();
+
+      // Create type guards
+      if (!isGraphQLResultForquotesQueryName(response)) {
+        throw new Error("Unexpected response from API.graphql");
+      }
+
+      if (!response.data) {
+        throw new Error("Response data is undefined");
+      }
+
+      const receivedNumberOfQuotes =
+        response.data.quotesQueryName.items[0].quotesGenerated;
+      setNumberOfQuotes(receivedNumberOfQuotes);
+    } catch (error) {
+      console.log("error getting quote data", error);
+    }
+  };
+
+  useEffect(() => {
+    updateQuoteInfo();
+  }, []);
+
+  // Functions for quote generator modal
+  const handleCloseGenerator = () => {
+    setOpenGenerator(false);
+    setProcessingQuote(false);
+    setQuoteReceived(null);
+  };
+
+  const handleOpenGenerator = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    setOpenGenerator(true);
+    setProcessingQuote(true);
+    try {
+      // Run Lambda Function
+      const runFunction = "runFunction";
+      const runFunctionStringified = JSON.stringify(runFunction);
+      const response = await API.graphql<GenerateAQuoteData>({
+        query: generateAQuote,
+        authMode: "AWS_IAM",
+        variables: {
+          input: runFunctionStringified,
+        },
+      });
+      const responseStringified = JSON.stringify(response);
+      const responseReStringified = JSON.stringify(responseStringified);
+      const bodyIndex = responseReStringified.indexOf("body=") + 5;
+      const bodyAndBase64 = responseReStringified.substring(bodyIndex);
+      const bodyArray = bodyAndBase64.split(",");
+      const body = bodyArray[0];
+      console.log(body);
+      setQuoteReceived(body);
+
+      // End state:
+      setProcessingQuote(false);
+
+      // Fetch if any new quotes were generated from counter
+      updateQuoteInfo();
+
+      // setProcessingQuote(false);
+      // setTimeout(() => {
+      //   setProcessingQuote(false);
+      // }, 3000);
+    } catch (error) {
+      console.log("error generating quote:", error);
+      setProcessingQuote(false);
+    }
+  };
+*/
   return (
     <>
       <Head>
-        <title>Create Next App</title>
-        <meta name="description" content="Generated by create next app" />
+        <title>Inspirational Quote Generator</title>
+        <meta name="description" content="A fun project to generate quotes" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={`${styles.main} ${inter.className}`}>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>pages/index.tsx</code>
-          </p>
-          <div>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+      {/* Quote Generator */}
+      <QuoteGeneratorCon>
+        <QuoteGeneratorInnerCon>
+          <QuoteGeneratorTitle>Daily Inspiration Generator</QuoteGeneratorTitle>
+
+          <QuoteGeneratorSubTitle>
+            Looking for a splash of inspiration? Generate a quote card with a
+            random inspirational quote provided by{" "}
+            <FooterLink
+              href="https://zenquotes.io/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              By{' '}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              />
-            </a>
-          </div>
-        </div>
+              ZenQuotes API
+            </FooterLink>
+            .
+          </QuoteGeneratorSubTitle>
 
-        <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-        </div>
+          <GenerateQuoteButton onClick={null /*handleOpenGenerator*/}>
+            <GenerateQuoteButtonText>Make a Quote</GenerateQuoteButtonText>
+          </GenerateQuoteButton>
+        </QuoteGeneratorInnerCon>
+      </QuoteGeneratorCon>
 
-        <div className={styles.grid}>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
+      {/* Background Images */}
+      <GradientBackgroundCon>
+        <BackgroundImage1 src={Clouds1} height="300" alt="cloudybackground1" />
+
+        <BackgroundImage2 src={Clouds2} height="300" alt="cloudybackground1" />
+      </GradientBackgroundCon>
+      {/* Footer */}
+      <FooterCon>
+        <>
+          Quotes Generated: {numberOfQuotes}
+          <br />
+          Developed with <RedSpan>♥</RedSpan> by{" "}
+          <FooterLink
+            href="https://youtube.com/brianhhough"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <h2>
-              Docs <span>-&gt;</span>
-            </h2>
-            <p>
-              Find in-depth information about Next.js features and&nbsp;API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Learn <span>-&gt;</span>
-            </h2>
-            <p>
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Templates <span>-&gt;</span>
-            </h2>
-            <p>
-              Discover and deploy boilerplate example Next.js&nbsp;projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Deploy <span>-&gt;</span>
-            </h2>
-            <p>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
+            {" "}
+            @BrianHHough{" "}
+          </FooterLink>
+        </>
+      </FooterCon>
     </>
-  )
+  );
 }

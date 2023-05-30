@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Link from "next/link";
 import Image from "next/image";
-import { Box, CircularProgress } from "@mui/material";
+//import { Box, CircularProgress } from "@mui/material";
 
 export const GradientBackgroundCon = styled.div`
   background: linear-gradient(to right, #000046, #1cb5e0);
@@ -151,7 +151,7 @@ export const GenerateQuoteButtonText = styled.div`
   width: 100%;
   text-align: center;
 `;
-
+/*
 export const QuoteGeneratorModalCon = styled(Box)`
   position: absolute;
   top: 50%;
@@ -161,7 +161,7 @@ export const QuoteGeneratorModalCon = styled(Box)`
   height: 70vh;
   box-shadow: 24;
   /* transition: 0.2s all ease-in-out; */
-
+/*
   background: rgb(193 193 255 / 19%);
   box-shadow: 0 8px 32px 0 rgb(31 38 135 / 37%);
   -webkit-backdrop-filter: blur(20px);
@@ -187,7 +187,9 @@ export const ModalCircularProgress = styled(CircularProgress)`
   stroke-linecap: round;
   position: relative;
   /* to account for the larger element pushing left */
+/*
   margin-left: -55px;
   left: 50%;
   transform: translateX(-50%);
 `;
+*/
