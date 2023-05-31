@@ -24,6 +24,9 @@ import {
 // Assets
 import Clouds1 from "../assets/cloud-and-thunder.png";
 import Clouds2 from "../assets/cloudy-weather.png";
+import { API } from "aws-amplify";
+import { quotesQueryName } from "@/src/graphql/queries";
+import { GraphQLResult } from "@aws-amplify/api-graphql";
 
 /*AWS AMPLIFY
 Access key: AKIA53YBBW7GOBAXFIUS
@@ -48,7 +51,7 @@ interface GenerateAQuoteData {
     body: string;
   };
 }
-
+*/
 // interface for our DynamoDB object
 interface UpdateQuoteInfoData {
   id: string;
@@ -72,7 +75,6 @@ function isGraphQLResultForquotesQueryName(
     response.data.quotesQueryName.items
   );
 }
-*/
 
 export default function Home() {
   const [numberOfQuotes, setNumberOfQuotes] = useState<Number | null>(0);
@@ -80,6 +82,7 @@ export default function Home() {
   const [openGenerator, setOpenGenerator] = useState(false);
   const [processingQuote, setProcessingQuote] = useState(false);
   const [quoteReceived, setQuoteReceived] = useState<String | null>(null);
+  */
 
   // Function to fetch our DynamoDB object (quotes generated)
   const updateQuoteInfo = async () => {
@@ -114,7 +117,7 @@ export default function Home() {
   useEffect(() => {
     updateQuoteInfo();
   }, []);
-
+  /*
   // Functions for quote generator modal
   const handleCloseGenerator = () => {
     setOpenGenerator(false);
